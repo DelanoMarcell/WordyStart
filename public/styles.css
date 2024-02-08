@@ -1,0 +1,88 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    
+   
+  }
+
+  h1{
+    text-align: center;
+  }
+  
+  .center-vertically {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+
+.slide-in {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  
+  /* Define animation */
+  @keyframes slideInFromLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .slide-in {
+    animation: slideInFromLeft 1s ease forwards;
+  }
+
+  .nav-link {
+    
+    border-bottom: 2px solid transparent;
+   
+  }
+
+  @keyframes borderBottomAnimation {
+    to {
+        
+      
+        border-bottom-color:black;
+    }
+  }
+
+  .nav-link:hover {
+    animation: borderBottomAnimation 200ms ease-in forwards;
+  }
+
+  .center-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+   
+  }
+  
+
+  .heading-word {
+    background-color: rgb( 248, 249, 250);
+    border-radius: 5px;
+    padding: 5px;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+
+  .button-container a {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  
+  .button-container a {
+    animation: slideInFromLeft 2s ease forwards;
+  }
