@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Connect to mongoDB database
 
 
-mongoose.connect(process.env.DATABASE_URL).then(
+mongoose.connect(process.env.DATABASE_URL2).then(
     (result)=>{
         console.log("Connected to MongoDB");
     }
