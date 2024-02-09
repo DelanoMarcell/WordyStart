@@ -168,7 +168,7 @@ app.get("/", (req,res)=>{
 })
 
 app.get("/subscribe", (req,res)=>{
-    res.sendFile(__dirname+"/views/subscribe.html");
+    res.sendFile(__dirname+"/views/Word.html");
 
 });
 
@@ -203,7 +203,7 @@ app.get("/unsubscribe", (req,res)=>{
 
    
 
-    res.sendFile(__dirname+"/views/unsubscribe.html")
+    res.sendFile(__dirname+"/views/Question.html")
 })
 
 app.post("/unsubscribe", (req,res)=>{
@@ -247,51 +247,6 @@ app.post("/unsubscribe", (req,res)=>{
 
 //0 6 * * *
 
-
-cron.schedule("*/55 * * * * *", async function() {
-   await generateRandomQuote().then((quote)=>{
-   //console.log(quote);
-
-   const emailList = emailCollection.find({}).then((arrayOfPersons)=>{
-    arrayOfPersons.forEach(async (person)=>{
-
-        const emailMessage = `
-    <p>Hey there ${person.name},</p>
-    <p>Here is your daily inspiration from WordyStart:</p>
-    <p><i>${quote}</i></p>
-    <p>We hope this quote brings positivity and motivation to your day!</p>
-    <p>Best regards,</p>
-    <p>WordyStart Team</p>
-`;
-
-      
-        await sendEmail({
-        toEmail: person.email,
-        subject: "Daily Inspiration: WordyStart",
-        html: emailMessage,
-        fromEmail: 'wordystartdaily@gmail.com',
-        fromPass: process.env.GOOGLE_EMAIL_KEY, 
-        }).catch(err => {
-        console.log("Error sending email: " + err);
-        });
-
-        
-    })
-   }).catch(err=>{
-    console.log("error : " + err)
-   })
-
-
-
-
-
-
-   }).catch(err=>{
-    console.log("error getting quote" + err)
-   })
-
-
-});
 
 
 
