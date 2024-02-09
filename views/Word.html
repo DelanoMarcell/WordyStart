@@ -50,10 +50,10 @@ $(document).ready(function () {
               <a class="nav-link" aria-current="page" href="/">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/subscribe">Word of today</a>
+              <a class="nav-link active" href="/word">Word of today</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/unsubscribe">Question of today</a>
+              <a class="nav-link" href="/question">Question of today</a>
             </li>
             
           </ul>
@@ -67,26 +67,43 @@ $(document).ready(function () {
   
    <div class="main-titles center-vertical">
 
-    <h1>Subscribe</h1>
-    <form action="/subscribe" method="post">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input name="email" type="email" required class="form-control" id="email" aria-describedby="email" placeholder="Enter email">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input name="name" type="text" required class="form-control" id="name" placeholder="Enter your name">
-        </div>
-
-        <div class="form-check">
-          <input required type="checkbox" class="form-check-input" id="agree">
-          <label class="form-check-label" for="agree">I agree to receive emails every morning until I unsubscribe</label>
-        </div>
-        <button type="submit" class="btn btn-light">Submit</button>
-      </form>
+    <div class="main-container">
+      <h1>Hey there, today's theme: <span id="theme" class=""></span></h1>
+      <p id="quote"></p>
+      <hr>
+      <p>I hope this message was able to convey a sense of motivation !</p>
+  </div>
+  
 
   </div>
+  <script>
+    function changeContent() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseJson = JSON.parse(this.responseText);
+
+                
+                document.getElementById("theme").innerText = responseJson.theme;
+                document.getElementById("quote").innerText = responseJson.quote;
+             
+            }
+        };
+
+        // Specify the URL you want to retrieve
+        var url = "/results";
+
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+
+    // Execute changeContent when the window has finished loading
+    window.onload = function() {
+        changeContent();
+    };
+</script>
+
+
   
 
 

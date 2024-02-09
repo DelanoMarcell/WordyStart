@@ -37,50 +37,74 @@ $(document).ready(function () {
 
   <body>
 
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
-            <a class="navbar-brand slide-in " href="/">WordyStart</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/">About</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/subscribe">Word of today</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="/unsubscribe">Question of today</a>
-                </li>
-                
-              </ul>
-            </div>
-          </div>
-        </nav>
-        
-      </header>
-
-
-  
-   
-  
-      <div class="main-titles center-vertical">
-
-        <h1>Unsubscribe</h1>
-        <form action="/unsubscribe" method="post">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input name="email" type="email" class="form-control" required id="email" aria-describedby="email" placeholder="Enter email">
-              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div>
-           
-            <button type="submit" class="btn btn-light">Submit</button>
-          </form>
-    
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand slide-in " href="/">WordyStart</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/word">Word of today</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/question">Question of today</a>
+            </li>
+            
+          </ul>
+        </div>
       </div>
+    </nav>
+    
+  </header>
+
+
+  
+   <div class="main-titles center-vertical">
+
+    <div class="main-container">
+      <h1>Hey there, today's theme: <span id="theme" class=""></span></h1>
+      <p id="question"></p>
+      <hr>
+      <p>I hope this question was thought-provoking! </p>
+  </div>
+  
+
+  </div>
+  <script>
+    function changeContent() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseJson = JSON.parse(this.responseText);
+
+                
+                document.getElementById("theme").innerText = responseJson.theme;
+                document.getElementById("question").innerText = responseJson.question;
+             
+            }
+        };
+
+        // Specify the URL you want to retrieve
+        var url = "/results";
+
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+
+    // Execute changeContent when the window has finished loading
+    window.onload = function() {
+        changeContent();
+    };
+</script>
+
+
+  
 
 
   </body>

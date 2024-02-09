@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Connect to mongoDB database
 
 
-mongoose.connect(process.env.DATABASE_URL2).then(
+mongoose.connect(process.env.DATABASE_URL).then(
     (result)=>{
         console.log("Connected to MongoDB");
     }
@@ -42,166 +42,164 @@ mongoose.connect(process.env.DATABASE_URL2).then(
 })
 
 //Schema that will used for documents inside the the Email collection
-let emailSchema = new mongoose.Schema({
-    name: {
+let inspirationSchema = new mongoose.Schema({
+    theme: {
         type: String,
         required: true
     },
-    email : {
+    quote : {
         type: String,
         required: true,
-        unique: true,
+    },
+    question:{
+        type: String,
+        required: true
+    },
+    date: {
+        type: String,
+        required: true
     }
 });
 
 //Creating a collection(if it doesnt already exist) that will use the schema defined above for the documents inside the collection 
-let emailCollection = mongoose.model("Email",emailSchema);
+let inspiration = mongoose.model("inspiration",inspirationSchema);
+
+//get todays date
+
+async function getDate(){
+const todaysDate = new Date();
+
+const year = todaysDate.getFullYear();
+const month = String(todaysDate.getMonth()+1)
+const day = String(todaysDate.getDate())
+
+const newDate = `${year}-${month}-${day}`;
+
+// console.log(newDate);
+return newDate;
+}
 
 
-const themes = [
-    "inspiration",
-    "motivation",
-    "life",
-    "happiness",
-    "success",
-    "love", 
-    "wisdom",
-    "friendship",
-    "goals",
-    "change",
-    "resilience",
-    "courage",
-    "positivity",
-    "perseverance",
-    "growth",
-    "determination",
-    "empowerment",
-    "belief",
-    "optimism",
-    "gratitude",
-    "transformation",
-    "faith",
-    "self-discovery",
-    "mindfulness",
-    "ambition",
-    "inner strength",
-    "overcoming challenges",
-    "encouragement",
-    "reflection",
-    "kindness",
-    "serenity",
-    "compassion",
-    "harmony",
-    "balance",
-    "purpose",
-    "enlightenment",
-    "joyfulness",
-    "generosity",
-    "resilience", 
-    "clarity",
-    "altruism",
-    "graciousness",
-    "serendipity",
-    "triumph",
-    "synchronicity",
-    "fortitude",
-    "empathy",
-    "belonging",
-    "jubilation",
-    "reverence"
-  ];
-  
-  console.log("Total themes:", themes.length);
+
+
+   
   
 
-async function generateRandomQuote(){
-    // Select a random theme
-    const theme = themes[Math.floor(Math.random() * themes.length)];
-    console.log("Theme : "+ theme)
+async function generateContent(){
+    
     
     const model = genAI.getGenerativeModel({ model: "gemini-pro"});
     
     // Include the theme in the prompt
-    const prompt = `Generate a single random ${theme} quote. Only return the quote and no other words. The word ${theme} doesnt have to appear in the sentence.`;
+    const prompt1 = `Generate a single random theme of the day. This theme will be used to generate an inspirational quote and a question relating to the theme. ONLY RETURN THE WORD. `;
     
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    console.log("quote : " + text);
-    return text;
+    const result1 = await model.generateContent(prompt1);
+    const response1 = await result1.response;
+    const theme = response1.text();
+
+    const prompt2 = `Generate a inspirational quote relating to the word ${theme}. Only return the quote. The word ${theme} doesnt have to appear in the quote. But the quote should relate to the ${theme} `;
+    const result2 = await model.generateContent(prompt2);
+    const response2 = await result2.response;
+    const quote = response2.text();
+
+
+    const prompt3 = `Generate an inspirational question relating to the word ${theme}. Only return the question. The word ${theme} doesnt have to appear in the question. But the question should relate to the ${theme} `;
+    const result3 = await model.generateContent(prompt3);
+    const response3 = await result3.response;
+    const question = response3.text();
+
+    const date = await getDate();
+    console.log("date : "+ date.toString())
+
+    inspiration.countDocuments({ date: date }).then(count => {
+        if (count > 0) {
+            console.log("Document exists for the provided date.");
+        } else {
+            console.log("No document found for the provided date.");
+           //Created document for date
+            let insp = inspiration.create({
+        theme: theme,
+        quote: quote,
+        question: question,
+        date: date
+    }).then(succ=>{
+        console.log("Document added!")
+    }).catch(err=>{
+        console.log("Error adding document" + err)
+    })
+        }
+    }).catch(err => {
+        console.error("Error:", err); // Handle the error appropriately
+    });
+
+    
+
+    
+
+
+   
+
+   // console.log({text1, text2, text3})
+    //return {theme, quote, question};
+
+    
 }
 
 
-async function sendEmail({ toEmail, subject, html, fromEmail, fromPass }) {
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: fromEmail,
-        pass: fromPass,
-      },
-    });
-  
-    try {
-     
-      let info = await transporter.sendMail({
-        from: `"WordyStart" <${fromEmail}>`,
-        to: toEmail, 
-        subject: subject, 
-        html: html, 
-      });
-  
-      console.log(`Message sent: ${info.messageId}`);
-    } catch (error) {
-      console.error(error);
-      throw error; 
-    }
-  }
+generateContent();
+
 
 
 app.get("/", (req,res)=>{
+
+   
+   
+
+
+
     res.sendFile(__dirname+"/views/index.html");
 
 
 })
 
-app.get("/subscribe", (req,res)=>{
+app.get("/word", (req,res)=>{
+    generateContent();
     res.sendFile(__dirname+"/views/Word.html");
-
 });
 
-app.post("/subscribe", (req,res)=>{
 
-    console.log("name submitted : "+ req.body.name);
-    console.log("email submitted : " + req.body.email);
 
-    emailCollection.create({
-        name: req.body.name,
-        email: req.body.email
-    }).then((result)=>{
-        console.log(`Successfully created document of ${req.body.name}, it will be stored in the collection : ` + result.collection.name);
-        res.sendFile(__dirname+"/views/subsuc.html");
-    }).catch((err)=>{
-        if(err.code===11000){
-            console.log("Failed : "+ err)
-            res.sendFile(__dirname+"/views/subfailExists.html");
-        }else{
-            console.log("Failed : "+ err)
-            res.sendFile(__dirname+"/views/subfail.html");
-        }
-       
+
+app.get("/results", async (req,res)=>{
+
+    const date = await getDate(); 
+
+    
+    inspiration.findOne({date: date}).then(succ=>{
+        console.log("found from result api "+ succ.quote )
+        res.send({
+            quote: succ.quote,
+            theme : succ.theme,
+            question: succ.question
+        })
+    }).catch(err=>{
+        console.log(err)
+        res.send({
+            quote: "error",
+            theme : "error",
+            question: "error"
+        })
     })
+
 
     
 
 
 });
 
-app.get("/unsubscribe", (req,res)=>{
+app.get("/question", (req,res)=>{
 
-   
+   generateContent();
 
     res.sendFile(__dirname+"/views/Question.html")
 })
