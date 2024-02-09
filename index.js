@@ -163,7 +163,7 @@ app.get("/", (req,res)=>{
 })
 
 app.get("/word", (req,res)=>{
-    generateContent();
+
     res.sendFile(__dirname+"/views/Word.html");
 });
 
@@ -185,9 +185,9 @@ app.get("/results", async (req,res)=>{
     }).catch(err=>{
         console.log(err)
         res.send({
-            quote: "error",
-            theme : "error",
-            question: "error"
+            quote: "INTERNAL ERROR",
+            theme : "INTERNAL ERROR",
+            question: "INTERNAL ERROR"
         })
     })
 
@@ -199,40 +199,10 @@ app.get("/results", async (req,res)=>{
 
 app.get("/question", (req,res)=>{
 
-   generateContent();
 
     res.sendFile(__dirname+"/views/Question.html")
 })
 
-app.post("/unsubscribe", (req,res)=>{
-
-    console.log(req.body.email);
-
-    emailCollection.findOneAndDelete({
-        email: req.body.email
-    }).then((result)=>{
-        console.log(`Successfully deleted document of ${req.body.email} `);
-        res.sendFile(__dirname+"/views/unsubsuc.html");
-    }).catch((err)=>{
-        // if(err.code===11000){
-        //     console.log("Failed : "+ err)
-        //     res.sendFile(__dirname+"/views/subfailExists.html");
-        // }else{
-        //     console.log("Failed : "+ err)
-        //     res.sendFile(__dirname+"/views/subfail.html");
-        // }
-
-      
-        console.log("Failed : "+ err)
-        res.sendFile(__dirname+"/views/unsubfail.html");
-        
-
-       
-    })
-
-
-
-});
 
 // cron.schedule("*/10 * * * * *", function() {
 //     console.log("running a task every 10 second");
