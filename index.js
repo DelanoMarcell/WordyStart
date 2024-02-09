@@ -64,7 +64,7 @@ const themes = [
     "life",
     "happiness",
     "success",
-    "love",
+    "love", 
     "wisdom",
     "friendship",
     "goals",
@@ -248,7 +248,7 @@ app.post("/unsubscribe", (req,res)=>{
 //0 6 * * *
 
 
-cron.schedule("*/25 * * * * *", async function() {
+cron.schedule("*/55 * * * * *", async function() {
    await generateRandomQuote().then((quote)=>{
    //console.log(quote);
 
