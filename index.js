@@ -145,17 +145,13 @@ async function generateContent(){
     
 }
 
-
-generateContent();
+generateContent()
 
 
 
 app.get("/", (req,res)=>{
 
    
-   
-
-
 
     res.sendFile(__dirname+"/views/index.html");
 
@@ -164,6 +160,7 @@ app.get("/", (req,res)=>{
 
 app.get("/word", (req,res)=>{
 
+   
     res.sendFile(__dirname+"/views/Word.html");
 });
 
@@ -185,9 +182,9 @@ app.get("/results", async (req,res)=>{
     }).catch(err=>{
         console.log(err)
         res.send({
-            quote: "INTERNAL ERROR",
-            theme : "INTERNAL ERROR",
-            question: "INTERNAL ERROR"
+            quote: " OOPS! CHECK BACK SOON",
+            theme : "SORRY,  CHECK BACK SOON! ",
+            question: "SORRY,  CHECK BACK SOON!"
         })
     })
 
@@ -199,7 +196,7 @@ app.get("/results", async (req,res)=>{
 
 app.get("/question", (req,res)=>{
 
-
+    
     res.sendFile(__dirname+"/views/Question.html")
 })
 

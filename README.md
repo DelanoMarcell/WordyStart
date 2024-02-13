@@ -31,9 +31,13 @@ Bootstrap: Stylish and responsive design for an optimal user experience.
 <b>Mongo DB</b>: A NoSQL database that stores the daily word and question.
 
 
-## About the Developer
-WordyStart was a one day project developed by Delano. Connect with me on [LinkedIn](https://www.linkedin.com/in/delanomartin/).
+## About
+WordyStart was a one day project.
 
-Thank you for choosing WordyStart to kickstart your day! 🌞
-
-Access the app [here](https://wordy-start.vercel.app).
+## To use the app locally, follow the steps below:
+1. Clone the repository.
+2. Run `npm install` to install the required dependencies.
+3. Run `npm start` to start the server.
+5. Have mongodb installed and running on your local machine.
+6. Get a google api key from here https://makersuite.google.com/app/apikey and replace the key in the .env file.
+4. Open your browser and navigate to `http://localhost:3000/` to use the app.
